@@ -19,8 +19,8 @@ Their is few steps before starting to use the program. The simulation has to be 
  - Go to :Online > login 
  - Then Go to : Online > Run
 
-<img src="imgs/login.PNG" height="100" />
-<img src="imgs/run.PNG" width="200" />
+<img src="imgs/login.png" height="100" />
+<img src="imgs/run.png" width="200" />
 
 ## 1. Command Pannels
 Their is 2 main command pannel in the project which consit of button that can be activated like in a real elevator.
