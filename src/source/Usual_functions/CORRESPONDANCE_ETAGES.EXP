@@ -1,0 +1,86 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Correspondance_Etages : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	CabPosBout: INT;
+	PosAscActu: INT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*
+	Cette fonction à pour but de faire correspondre un appui de la cabine à un appel provenant du palier (sans activer de bouton)
+	le but étant de limiter les variables et de se caller sur le cycle existant fonctionnel
+
+	Après avoir récuperer la position de l'ascenseur, nous allons faire correspondre le sens pour que l'étage demandé soit e porchain deservie (dans le cycle)
+
+	Si l'etage demandé est dans le sens et n'as pas encore été demandé, alors il sera dans ce sens
+	Si l'étage demandé est déja passé alors nous nous callons sur l'autre sens pour qu'il soit deservie au porchain cycle
+*)
+
+PosAscActu:= Last_Capt_Pres();
+IF CABRDCswitch THEN
+	IF NOT ARRETcabRDC THEN ARRETcabRDC:=TRUE;END_IF
+	CABRDC:=TRUE;
+END_IF
+
+IF CABET1switch THEN
+	CabPosBout:=2;
+	IF PosAscActu < 5 OR  ETAGE_SUIVANT < 9 THEN
+		IF PosAscActu >= 5 THEN PosAscActu:= ETAGE_SUIVANT;END_IF
+ 		IF SENS_M THEN
+			IF PosAscActu <= CabPosBout THEN ARRETcabM1:=TRUE;
+			ELSE ARRETcabD1:=TRUE;END_IF
+		ELSE
+			IF PosAscActu >= CabPosBout THEN ARRETcabD1:=TRUE;
+			ELSE ARRETcabM1:=TRUE;END_IF
+		END_IF
+	ELSE
+		IF SENS_M THEN
+			IF NOT ARRETcabM1 THEN ARRETcabM1:=TRUE;END_IF
+		ELSE
+			IF NOT ARRETcabD1 THEN ARRETcabD1:=TRUE;END_IF
+		END_IF
+	END_IF
+	CABET1:=TRUE;
+END_IF
+
+IF CABET2switch THEN
+	CabPosBout:=3;
+	IF PosAscActu < 5 OR  ETAGE_SUIVANT < 9 THEN
+		IF PosAscActu >= 5 THEN PosAscActu:= ETAGE_SUIVANT;END_IF
+ 		IF SENS_M THEN
+			IF PosAscActu <= CabPosBout THEN ARRETcabM2:=TRUE;
+			ELSE ARRETcabD2:=TRUE;END_IF
+		ELSE
+			IF PosAscActu >= CabPosBout THEN ARRETcabD2:=TRUE;
+			ELSE ARRETcabM2:=TRUE;END_IF
+		END_IF
+	ELSE
+		IF SENS_M THEN
+			IF NOT ARRETcabM2 THEN ARRETcabM2:=TRUE;END_IF
+		ELSE
+			IF NOT ARRETcabD2 THEN ARRETcabD2:=TRUE;END_IF
+		END_IF
+	END_IF
+	CABET2:=TRUE;
+END_IF
+
+IF CABET3switch THEN
+	CabPosBout:=4;
+	IF NOT ARRETcabET3 THEN ARRETcabET3:=TRUE;END_IF
+	CABET3:=TRUE;
+END_IF
+
+(*Si un appel palier est effectué, il est associé à sa mémorisation*)
+IF PALRDC THEN ARRETcabRDC:=TRUE;END_IF
+IF PALD1 THEN ARRETcabD1:=TRUE;END_IF
+IF PALM1 THEN ARRETcabM1:=TRUE;END_IF
+IF PALD2 THEN ARRETcabD2:=TRUE;END_IF
+IF PALM2 THEN ARRETcabM2:=TRUE;END_IF
+IF PAL3 THEN ARRETcabET3:=TRUE;END_IF
+
+END_FUNCTION

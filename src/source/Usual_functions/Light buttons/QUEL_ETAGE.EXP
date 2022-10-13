@@ -1,0 +1,38 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles\/Voyants_boutons' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Quel_Etage : BOOL
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction permet d'activer et de désactiver les voyant de présence à l'érage en fonction des capteurs de présence*)
+IF PRDC THEN
+	VPALRDC:=TRUE;
+	VPAL1:=FALSE;
+	VPAL2:=FALSE;
+	VPAL3:=FALSE;
+ELSE IF PET1 THEN
+	VPALRDC:=FALSE;
+	VPAL1:=TRUE;
+	VPAL2:=FALSE;
+	VPAL3:=FALSE;
+ELSE IF PET2 THEN
+	VPALRDC:=FALSE;
+	VPAL1:=FALSE;
+	VPAL2:=TRUE;
+	VPAL3:=FALSE;
+ELSE IF PET3 THEN
+	VPALRDC:=FALSE;
+	VPAL1:=FALSE;
+	VPAL2:=FALSE;
+	VPAL3:=TRUE;
+END_IF
+END_IF
+END_IF
+END_IF
+Quel_Etage:=TRUE;
+END_FUNCTION

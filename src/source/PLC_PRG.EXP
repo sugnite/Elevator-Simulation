@@ -1,0 +1,41 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM PLC_PRG
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+INITIAL_STEP Init:
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Init TO Step6:= 
+TRUE
+
+
+END_TRANSITION
+STEP Step6:
+PRG_MAIN;
+Quel_Etage();
+Priorite_Memo();
+Appel_Palier();
+Arret_Urgence();
+ZAuto_RUN();
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step6 TO Init:= 
+STOPbuttonVar
+
+
+END_TRANSITION
+
+END_PROGRAM

@@ -1,0 +1,159 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Priorite_Memo : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	CompteurLocal: INT;
+	ETAGE_GOOD: INT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction pour but de gérer les priorité en fonction de la mémorisation*)
+
+(* Création d'un tableau pour la mémorisation des appels dans le sens montée*)
+TableDeVeriteMontee[1]:=ARRETcabRDC;
+TableDeVeriteMontee[2]:=ARRETcabM1;
+TableDeVeriteMontee[3]:=ARRETcabM2;
+TableDeVeriteMontee[4]:=ARRETcabET3;
+
+(*Création d'un tableau pour a mémorisation des appels dans le sens de la descente*)
+TableDeVeriteDesc[1]:=ARRETcabRDC;
+TableDeVeriteDesc[2]:=ARRETcabD1;
+TableDeVeriteDesc[3]:=ARRETcabD2;
+TableDeVeriteDesc[4]:=ARRETcabET3;
+
+(*Correspondance des tableaux précedent avec le numéro du bouton*)
+ArretsDesc[1]:=0;(*Rez de chaussé*)
+ArretsDesc[2]:=1;(*etage 1 descente*)
+ArretsDesc[3]:=3;(*etage 2 descente*)
+ArretsDesc[4]:=5;(*etage 3 *)
+
+ArretsMonte[1]:=0;(*Rez de chaussé*)
+ArretsMonte[2]:=2;(*etage 1 montée*)
+ArretsMonte[3]:=4;(*etage 2 montée*)
+ArretsMonte[4]:=5;(*etage 3 *)
+
+IF NOT CABM AND NOT CABD AND NOT PRDC AND NOT PET1 AND NOT PET2 AND NOT PET3 THEN
+	Niveau_Actuel:=Last_Capt_Pres();
+ELSE
+	Niveau_Actuel:= Last_Capt_Pres2();
+END_IF
+(*IF Ancien_Niveau <> 0 THEN Niveau_Actuel:= Ancien_Niveau;END_IF*)
+
+(*On test si un des appels de la mémorisation est true*)
+IF ARRETcabRDC OR ARRETcabD1 OR ARRETcabM1 OR ARRETcabD2 OR ARRETcabM2 OR ARRETcabET3 THEN
+
+(*La gestion de la mémorisation suivante va retourner trois variables :
+	-Le niveau de sortie du palier (1;2;3;4) 
+	-Le niveau de sortie en fonction du bouton (RDC; PALD1,PALM1,PALD2,etc
+	-Le sens de l'ascenseur
+
+La gestion de la priorité se base sur le sens de l'ascenceur et le niveau auquel il se situe.
+Après reflexion les fonctions sont divisés pour couvrir toutes les combinaisons possibles avec 4 CAS Classé par ordre depriorité  (Prio CAS1 > Prio CAS2 etc... :
+
+	CAS 1 : L'étage se situe dans le bon sens et peut etre deservie ensuite (ex: PET1 + PALM2 + SENS montée -> TRUE);
+	CAS 2 : L'étage se situe dans l'autre sens et l'asenceur doit changer de sens (ex: PET1 + PRDC + SENS montée -> Changement de sens puis CAS 1
+	CAS 3: L'étage se situe dans le bon sens mais l'ascenceur doit effectuer un demi tour (ex PET2 + PALM2 + SENS montée -> demi tour puis desserte de l'étage
+	CAS 4 :  l'étage se situe dans l'autre sens mais l'asenceur doit effectuer un demi tour pour y acceder ( ex PET1 +SENSmontée + PALD2 -> Demi tour puis changement de sens
+
+Avec ces 4 cas nous pouvons faire face à toutes les situations et gérer les déplacements le plus fluidement possible. *)
+
+	IF Niveau_Actuel > 0 THEN
+		(*----------------------------------*)
+		(* SENS -------- MONTEE*)
+		(*----------------------------------*)
+		IF SENS_M THEN
+			(* On test l'étage le plus proche dans le bon sens*)
+			FOR CompteurLocal:=4 TO Niveau_Actuel BY -1 DO
+				IF TableDeVeriteMontee[CompteurLocal] THEN
+					ETAGE_GOOD:= CompteurLocal;
+				END_IF
+			END_FOR
+			IF ETAGE_GOOD<> 0 THEN ETAGE_SUIVANT:=ETAGE_GOOD;END_IF
+			(*Si pas de résulats dans le sens*)
+			(*Alors on teste dans l'autre sens*)
+			IF ETAGE_SUIVANT = 9 THEN
+				FOR CompteurLocal:=1 TO Niveau_Actuel BY 1 DO
+					IF TableDeVeriteDesc[CompteurLocal] THEN
+						ETAGE_SUIVANT:= CompteurLocal;
+						SENS_M:=FALSE;
+					END_IF
+				END_FOR
+			END_IF
+			(*Si toujours pas de résulats dans le sens*)
+			(*Alors on teste l'ancien sens mais inversé au niveau de l'étage*)
+			IF ETAGE_SUIVANT = 9 THEN
+				FOR CompteurLocal:=1 TO Niveau_Actuel BY 1 DO
+					IF TableDeVeriteMontee[CompteurLocal] THEN
+						ETAGE_SUIVANT:= CompteurLocal;
+					END_IF
+				END_FOR
+			END_IF
+			(*Si toujours pas de résulats dans le sens mais inversé*)
+			(*Alors on teste l''autre sens mais inversé au niveau de l'étage*)
+			IF ETAGE_SUIVANT = 9 THEN
+				FOR CompteurLocal:=4 TO Niveau_Actuel BY -1 DO
+					IF TableDeVeriteDesc[CompteurLocal] THEN
+						ETAGE_SUIVANT:= CompteurLocal;
+						SENS_M:=FALSE;
+					END_IF
+				END_FOR
+			END_IF
+		(*----------------------------------*)
+		(* SENS -------- DESCENTE*)
+		(*----------------------------------*)
+		ELSIF NOT SENS_M THEN
+			(* On test l'étage le plus proche dans le bon sens*)
+			FOR CompteurLocal:=1 TO Niveau_Actuel BY 1 DO
+				IF TableDeVeriteDesc[CompteurLocal] THEN
+					ETAGE_GOOD:= CompteurLocal;
+				END_IF
+			END_FOR
+			IF ETAGE_GOOD<> 0 THEN ETAGE_SUIVANT:=ETAGE_GOOD;END_IF
+			(*Si pas de résulats dans le sens*)
+			(*Alors on teste dans l'autre sens*)
+			IF ETAGE_SUIVANT = 9 THEN
+				FOR CompteurLocal:=4 TO Niveau_Actuel BY -1 DO
+					IF TableDeVeriteMontee[CompteurLocal] THEN
+						ETAGE_SUIVANT:= CompteurLocal;
+						SENS_M:=TRUE;
+					END_IF
+				END_FOR
+			END_IF
+			(*Si toujours pas de résulats dans le sens*)
+			(*Alors on teste l'ancien sens mais inversé au niveau de l'étage*)
+			IF ETAGE_SUIVANT = 9 THEN
+				FOR CompteurLocal:=4 TO Niveau_Actuel BY -1 DO
+					IF TableDeVeriteDesc[CompteurLocal] THEN
+						ETAGE_SUIVANT:= CompteurLocal;
+					END_IF
+				END_FOR
+			END_IF
+			(*Si toujours pas de résulats dans le sens mais inversé*)
+			(*Alors on teste l''autre sens mais inversé au niveau de l'étage*)
+			IF ETAGE_SUIVANT = 9 THEN
+				FOR CompteurLocal:=1 TO Niveau_Actuel BY 1 DO
+					IF TableDeVeriteMontee[CompteurLocal] THEN
+						ETAGE_SUIVANT:= CompteurLocal;
+						SENS_M:=TRUE;
+					END_IF
+				END_FOR
+			END_IF
+		END_IF
+		(*----------------------------------------*)
+		(*ASSIGNATION DU RESULTAT*)
+		(*----------------------------------------*)
+(*Récupération du résultat en fonction des listes prélablemen créer*)
+		IF ETAGE_SUIVANT < 9 AND SENS_M THEN
+			PROCHAIN_ARRET:=ArretsMonte[ETAGE_SUIVANT];
+		ELSIF ETAGE_SUIVANT < 9 AND NOT SENS_M THEN
+			PROCHAIN_ARRET:=ArretsDesc[ETAGE_SUIVANT];
+		END_IF
+	END_IF
+END_IF
+
+
+END_FUNCTION

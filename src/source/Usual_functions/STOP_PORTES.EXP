@@ -1,0 +1,31 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION STOP_PORTES : BOOL
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction est une sécurité qui bloque l'ascenseur tant que toutes les portes ne sont pas fermé*)
+IF CABD OR CABM THEN
+	IF NOT PRDCfer OR NOT P1fer OR NOT P2fer OR NOT P3fer THEN
+		CABDstatus:= CABD;
+		CABMstatus:= CABM;
+		CABD:=FALSE;
+		CABM:=FALSE;
+	END_IF
+ELSIF NOT CABD AND NOT CABM THEN
+	IF PRDCfer AND P1fer AND P2fer AND P3fer THEN
+		IF CABDstatus OR CABDstatus THEN
+			CABD:= CABDstatus;
+			CABM:= CABMstatus;
+			CABDstatus:=FALSE;
+			CABMstatus:=FALSE;
+		END_IF
+	END_IF
+END_IF
+
+END_FUNCTION

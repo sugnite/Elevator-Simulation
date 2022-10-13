@@ -1,0 +1,56 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Simulation_Visuelle' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION VisuPortesRDC : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	TimerDeTempo: TP;
+	CompteurPortesVisu: INT;
+	CompteurVarVisu: INT;
+	CompteurDeTemps: INT;
+	Step: INT;
+	CompteurLocal: INT;
+	CONTACTEUR_SEC: INT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(* Cette fonction sert à fermer les portes du rez de chaussé en fonction des donné transmises par le porgramme principal*
+
+	La fonction va simuler une fermeture sur action d'un moteur, et simuler le capteur  lorsque la coordonée de position fermé est atteinte : x=0 et y=-2*)
+IF FRDC OR ORDC THEN
+	(*On simule la position physique du contacteur avec des coordonnées*)
+	IF FRDC THEN CONTACTEUR_SEC:=-71;
+	ELSE CONTACTEUR_SEC:=0;END_IF
+	wait(IN:=TRUE, PT:=T#1ms);
+	FOR CompteurLocal:=1 TO 3 BY 1 DO
+		IF NOT wait.Q THEN
+			wait(IN:=FALSE);
+			(* en fonction de l'état du contacteur nous allons
+			simuler une ouverture/fermeture de la porte*)
+
+			(* nous allons utiliser les fonctions de coordonnées
+			pour que la simulation suivent une trajectoire excate et soienet parfaitement synchronisé*)
+			IF VisuRDCDx > CONTACTEUR_SEC THEN
+				VisuRDCDx:=VisuRDCDx-1;
+				VisuRDCDy:=FX_PorteD(VisuRDCDx);
+				VisuRDCGx:=FX_Porte_Vitesse(VisuRDCDx);
+				VisuRDCGy:=FX_PorteG(VisuRDCGx);
+			ELSIF  VisuRDCDx < CONTACTEUR_SEC THEN
+				VisuRDCDx:=VisuRDCDx+1;
+				VisuRDCDy:=FX_PorteD(VisuRDCDx);
+				VisuRDCGx:=FX_Porte_Vitesse(VisuRDCDx);
+				VisuRDCGy:=FX_PorteG(VisuRDCGx);
+			END_IF
+		END_IF
+	END_FOR
+END_IF
+
+IF VisuRDCDx = - 71  THEN PRDCfer:=TRUE;
+ELSE PRDCfer:=FALSE;END_IF
+
+IF VisuRDCDx = 0  THEN PRDCouv:=TRUE;
+ELSE PRDCouv:=FALSE;END_IF
+
+END_FUNCTION

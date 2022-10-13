@@ -1,0 +1,211 @@
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @GLOBAL_VARIABLE_LIST := 'Variables_Globales' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+VAR_GLOBAL
+(* ----------------------------------
+	Entrée
+-------------------------------------*)
+	(*Présence étage*)
+	PRDC: BOOL;
+	PET1: BOOL;
+	PET2: BOOL;
+	PET3: BOOL;
+
+	(*Appel à partir du palier de l'étage*)
+	PALRDC: BOOL;
+	PALD1: BOOL;
+	PALM1: BOOL;
+	PALD2: BOOL;
+	PALM2: BOOL;
+	PAL3: BOOL;
+
+	(*Clignotement d'Appel à partir du palier de l'étage*)
+	PALRDCcligno: BOOL;
+	PALD1cligno: BOOL;
+	PALM1cligno: BOOL;
+	PALD2cligno: BOOL;
+	PALM2cligno: BOOL;
+	PAL3cligno: BOOL;
+
+	(*Appel à partir de la cabine*)
+	CABRDC: BOOL;
+	CABET1: BOOL;
+	CABET2: BOOL;
+	CABET3: BOOL;
+
+	(*Porte fermée*)
+	PRDCouv: BOOL;
+	P1ouv: BOOL;
+	P2ouv: BOOL;
+	P3ouv: BOOL;
+
+	(*Porte ouverte*)
+	PRDCfer: BOOL;
+	P1fer: BOOL;
+	P2fer: BOOL;
+	P3fer: BOOL;
+
+	(* Obstacle a la fermeture*)
+	Obs: BOOL;
+
+	(* Arret dy systeme *)
+(* ----------------------------------
+	Sorties
+-------------------------------------*)
+	(*Ouverture de porte*)
+	ORDC: BOOL;
+	O1: BOOL;
+	O2: BOOL;
+	O3: BOOL;
+
+	(*Fermeture de porte*)
+	FRDC: BOOL;
+	F1: BOOL;
+	F2: BOOL;
+	F3: BOOL;
+
+	(*Moteur cabine*)
+	CABD: BOOL;
+	CABM: BOOL;
+
+	(*Voyant de présence d'étage*)
+	VPALRDC: BOOL;
+	VPAL1: BOOL;
+	VPAL2: BOOL;
+	VPAL3: BOOL;
+
+	(*Voyant d'apple étage*)
+	VRDC: BOOL;
+	V1: BOOL;
+	V2: BOOL;
+	V3: BOOL;
+
+(* ----------------------------------
+		Autres Variables
+-------------------------------------*)
+	(*Variable du Timer*)
+	T1: TP;
+	(*Variable d'initialization*)
+	STOPbuttonVar: BOOL;
+	CABDstatus: BOOL;
+	CABMstatus: BOOL;
+	T2: TP;
+	ESTINIT2: BOOL;
+	ReinitAscenseur: BOOL;
+	SFCInit: BOOL;
+	SFCReset: BOOL;
+	T3: TP;
+	COUNTSTEP: INT;
+	CompteurFor: INT;
+	ETAGE_SUIVANT: INT;
+	SENS_M: BOOL;
+	TableDeVeriteMontee: ARRAY [1..4] OF BOOL;
+	TableDeVeriteDesc: ARRAY [1..4] OF BOOL;
+	TestSens: INT;
+	PROCHAIN_ARRET: INT;
+	ArretsDesc: ARRAY [1..4] OF INT;
+	ArretsMonte: ARRAY [1..4] OF INT;
+	RE_OUVRE: BOOL;
+	ARRETcabRDC: BOOL;
+	ARRETcabM1: BOOL;
+	ARRETcabD1: BOOL;
+	ARRETcabM2: BOOL;
+	ARRETcabD2: BOOL;
+	ARRETcabET3: BOOL;
+	CABRDCswitch: BOOL;
+	CABET1switch: BOOL;
+	CABET2switch: BOOL;
+	CABET3switch: BOOL;
+
+	UpFleche: BOOL;
+	DownFleche: BOOL;
+	RightFleche: BOOL;
+	LeftFleche: BOOL;
+	FlecheSwitch:BOOL;
+
+	CABmoveY: INT;
+	VisuRDCDx: INT;
+	VisuRDCDy: REAL;
+	VisuRDCGx: REAL;
+	VisuRDCGy: REAL;
+	VisuET1Dx: INT;
+	VisuET1Dy: REAL;
+	VisuET1Gx: REAL;
+	VisuET1Gy:REAL;
+	VisuET2Dx: INT;
+	VisuET2Dy: REAL;
+	VisuET2Gx: REAL;
+	VisuET2Gy: REAL;
+	VisuET3Dx: INT;
+	VisuET3Dy: REAL;
+	VisuET3Gx: REAL;
+	VisuET3Gy: REAL;
+	InitPortesAscSalon: BOOL;
+	T6: TP;
+	TIMEURblock: BOOL;
+	CompteActionsTime: INT;
+	wait: TP;
+	PALRDCsave: BOOL;
+	PALD1save: BOOL;
+	PALM1save: BOOL;
+	PALD2save: BOOL;
+	PALM2save: BOOL;
+	PAL3save: BOOL;
+	CABRDCsave: BOOL;
+	CABET1save: BOOL;
+	CABET2save: BOOL;
+	CABET3save: BOOL;
+	AfficheBoutonsReset: BOOL;
+	BoutonResetVrai: BOOL;
+	BoutonRepriseVrai: BOOL;
+	STOPbuttonVarImpuls: BOOL;
+	ARRETcabRDCsave: BOOL;
+	ARRETcabM1save: BOOL;
+	ARRETcabD1save: BOOL;
+	ARRETcabM2save: BOOL;
+	ARRETcabD2save: BOOL;
+	ARRETcabET3save: BOOL;
+	ReOuvreCabine: BOOL;
+	ForceFermeCabine: BOOL;
+	BoutonRepriseStopSwitch: BOOL;
+	ZoneDepCab: INT;
+	DisplayNumbET3: BOOL;
+	DisplayNumbET2: BOOL;
+	DisplayNumbET1: BOOL;
+	DisplayNumbETRDC: BOOL;
+	FLECHE_VERS: BOOL;
+	DisplayVersRDC: BOOL;
+	DisplayVersET1: BOOL;
+	DisplayVersET2: BOOL;
+	DisplayVersET3: BOOL;
+	FinDefinition_SENS: BOOL;
+	Offset_ChiffreY: INT;
+	CABDsave: BOOL;
+	CABMsave: BOOL;
+	ORDCsave: BOOL;
+	O1save: BOOL;
+	O2save: BOOL;
+	O3save: BOOL;
+	F1save: BOOL;
+	FRDCsave: BOOL;
+	F2save: BOOL;
+	F3save: BOOL;
+	PROCHAIN_ARRETsave: INT;
+	ETAGE_SUIVANTsave: INT;
+	AfficheBoutonsReset2: BOOL;
+	StanbyActive: BOOL;
+	EXIT_StanbyFunc: BOOL;
+	Niveau_Actuel: INT;
+	Ancien_Niveau: INT;
+	Last_Capt_Pres_Rec: INT;
+END_VAR
+
+(* @OBJECT_END := 'Variables_Globales' *)
+(* @CONNECTIONS := Variables_Globales
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0
+*)

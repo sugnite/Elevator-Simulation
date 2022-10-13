@@ -1,0 +1,59 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles\/Voyants_boutons' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Appel_Palier : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	TesteurLocal: BOOL;
+	Operate_Monte: BOOL;
+	CompteurLocal: INT;
+	CompteurForLocal:INT;
+	Niveau_Actuel: INT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction prend en charge un appel du palier
+si l'ascenseur est initialisé elle renvoie l'appel palier,  enregistre la mémo et lance le clignotement*)
+IF ESTINIT2  OR StanbyActive THEN
+	IF PALRDCcligno THEN
+		PALRDC:=TRUE;
+	END_IF
+	IF NOT PALRDC THEN
+		VRDC:=FALSE;
+	END_IF
+	
+	IF PALD1cligno THEN
+		PALD1:=TRUE;
+	END_IF
+	IF PALM1cligno THEN
+		PALM1:=TRUE;
+	END_IF
+	
+	IF NOT PALD1 AND NOT PALM1 THEN
+		V1:=FALSE;
+	END_IF
+	
+	IF PALD2cligno THEN
+		PALD2:=TRUE;
+	END_IF
+	IF PALM2cligno THEN
+		PALM2:=TRUE;
+		COUNTSTEP:=COUNTSTEP+1;
+	END_IF
+	IF NOT PALD2 AND NOT PALM2 THEN
+		V2:=FALSE;
+	END_IF
+
+	IF PAL3cligno THEN
+		PAL3:=TRUE;
+		COUNTSTEP:=COUNTSTEP+1;
+	END_IF
+
+	IF NOT PAL3 THEN V3:=FALSE;END_IF
+	IF PALRDC OR PALD1 OR PALM1 OR PALM2 OR PALD2 OR PAL3 OR CABRDC OR CABET1 OR CABET2 OR CABET3 THEN EXIT_StanbyFunc:=TRUE;
+	ELSE EXIT_StanbyFunc:=FALSE; END_IF
+END_IF
+
+END_FUNCTION

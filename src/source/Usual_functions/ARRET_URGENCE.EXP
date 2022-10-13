@@ -1,0 +1,141 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Arret_Urgence : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	ReinitAscenseurProcess: BOOL;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(* Cette fonction va lors d'une impulsion sur l'arret d'urgence, bloquer tous les mouvements des moteurs de l'ascenceur
+et attendre une réponse de l'utilisateur quand à l'état de retour à la normal à adopter: reset / Reprise du dernier cycle.*) 
+IF STOPbuttonVarImpuls THEN
+	STOPbuttonVar:=TRUE;
+	ReinitAscenseurProcess:=TRUE;
+END_IF
+IF STOPbuttonVar THEN
+(*STOP MOTORS *)
+	(*on coupe tout les moteurs en action*)
+	STOPbuttonVar:=TRUE;
+
+	IF ReinitAscenseurProcess THEN
+		(*on sauvegarde l'état de la logique de l'ascenceur
+			-boutons 
+			-voyants
+			-variable de prio
+*)
+		CABDsave:=CABD;
+		CABMsave:=CABM;
+
+		PALRDCsave:=PALRDC;
+		PALD1save:=PALD1;
+		PALM1save:=PALM1;
+		PALD2save:=PALD2;
+		PALM2save:=PALM2;
+		PAL3save:=PAL3;
+
+		CABRDCsave:=CABRDC;
+		CABET1save:=CABET1;
+		CABET2save:=CABET2;
+		CABET3save:=CABET3;
+
+		ARRETcabRDCsave:=ARRETcabRDC;
+		ARRETcabM1save:=ARRETcabM1;
+		ARRETcabD1save:=ARRETcabD1;
+		ARRETcabM2save:=ARRETcabM2;
+		ARRETcabD2save:=ARRETcabD2;
+		ARRETcabET3save:=ARRETcabET3;
+
+		PROCHAIN_ARRETsave:=PROCHAIN_ARRET;
+		ETAGE_SUIVANTsave:=ETAGE_SUIVANT;
+
+		ReinitAscenseurProcess:=FALSE;
+	END_IF
+
+	CABD:=FALSE;
+	CABM:=FALSE;
+
+	ORDC:=FALSE;
+	O1:=FALSE;
+	O2:=FALSE;
+	O3:=FALSE;
+
+	FRDC:=FALSE;
+	F1:=FALSE;
+	F2:=FALSE;
+	F3:=FALSE;
+
+	ARRETcabRDC:=FALSE;
+	ARRETcabM1:=FALSE;
+	ARRETcabD1:=FALSE;
+	ARRETcabM2:=FALSE;
+	ARRETcabD2:=FALSE;
+	ARRETcabET3:=FALSE;
+
+	PALRDC:=FALSE;
+	PALD1:=FALSE;
+	PALM1:=FALSE;
+	PALD2:=FALSE;
+	PALM2:=FALSE;
+	PAL3:=FALSE;
+
+	CABRDC:=FALSE;
+	CABET1:=FALSE;
+	CABET2:=FALSE;
+	CABET3:=FALSE;
+	AfficheBoutonsReset:=FALSE;
+	(*Reprise si initiaisé*)
+	IF ESTINIT2 THEN AfficheBoutonsReset2:=TRUE;END_IF
+
+ELSE
+	AfficheBoutonsReset:=TRUE;
+	AfficheBoutonsReset2:=FALSE;
+END_IF
+
+(* si l'utilisateur demande un reset de l'ascenceur*)
+IF BoutonResetVrai THEN
+	ESTINIT2:=FALSE;
+	STOPbuttonVar:=FALSE;
+	BoutonResetVrai:=FALSE;
+	ETAGE_SUIVANT:=1;
+	PROCHAIN_ARRET:=0;
+
+(* si l'utilisateur demande un retour au dernier état de l'ascenceur*)
+ELSIF BoutonRepriseVrai THEN
+	ESTINIT2:=TRUE;
+	STOPbuttonVar:=FALSE;
+
+	IF NOT PRDC AND NOT PET1 AND NOT PET2 AND NOT PET3 THEN
+		CABD:=CABDsave;
+		CABM:=CABMsave;
+	END_IF
+
+	PALRDC:=PALRDCsave;
+	PALD1:=PALD1save;
+	PALM1:=PALM1save;
+	PALD2:=PALD2save;
+	PALM2:=PALM2save;
+	PAL3:=PAL3save;
+
+	CABRDC:=CABRDCsave;
+	CABET1:=CABET1save;
+	CABET2:=CABET2save;
+	CABET3:=CABET3save;
+
+	ARRETcabRDC:=ARRETcabRDCsave;
+	ARRETcabM1:=ARRETcabM1save;
+	ARRETcabD1:=ARRETcabD1save;
+	ARRETcabM2:=ARRETcabM2save;
+	ARRETcabD2:=ARRETcabD2save;
+	ARRETcabET3:=ARRETcabET3save;
+
+	PROCHAIN_ARRET:=PROCHAIN_ARRETsave;
+	ETAGE_SUIVANT:=ETAGE_SUIVANTsave;
+	BoutonRepriseVrai:=FALSE;
+END_IF
+
+
+END_FUNCTION

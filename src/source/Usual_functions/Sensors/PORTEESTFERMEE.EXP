@@ -1,0 +1,33 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles\/Capteurs' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION PorteEstFermee : BOOL
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction permet de savoir si la porte à l'étage ou se trouve l'ascenseur est fermée.
+Elle renvoie true si elle est fermée.
+*)
+PorteEstFermee:=FALSE;
+IF Get_Floor() = 0 THEN
+	IF PRDCfer THEN PorteEstFermee:=TRUE;
+	ELSE PorteEstFermee:=FALSE;
+	END_IF
+ELSIF Get_Floor() = 1 THEN
+	IF P1fer  THEN PorteEstFermee:=TRUE;
+	ELSE PorteEstFermee:=FALSE;
+	END_IF
+ELSIF Get_Floor() = 2 THEN
+	IF P2fer  THEN PorteEstFermee:=TRUE;
+	ELSE PorteEstFermee:=FALSE;
+	END_IF
+ELSIF Get_Floor() = 3 THEN
+	IF P3fer  THEN PorteEstFermee:=TRUE;
+	ELSE PorteEstFermee:=FALSE;
+	END_IF
+END_IF
+END_FUNCTION

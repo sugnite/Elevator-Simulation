@@ -1,0 +1,20 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Simulation_Visuelle' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION FX_Porte_Vitesse : REAL
+VAR_INPUT
+	PosXPorte: INT;
+END_VAR
+VAR
+	VarLocalA: REAL;
+	ValXLocal: REAL;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction retourne la position X de la porte gauche en fonction de la position X de la porte droite*)
+(* Elle permet une exacte synchronisation des deux portes*)
+VarLocalA:=-(59.0/71.0);
+ValXLocal:= INT_TO_REAL(PosXPorte);
+FX_Porte_Vitesse:=(VarLocalA)*(ValXLocal);
+END_FUNCTION

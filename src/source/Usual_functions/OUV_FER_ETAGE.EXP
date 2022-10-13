@@ -1,0 +1,38 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Ouv_Fer_Etage : BOOL
+VAR_INPUT
+	(*True pour ouvrir et False pour fermer*)
+	OuvrirFermer:BOOL;
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction ouvre la porte de l'étage à laquelle il se trouve l'ascenseur si ell est vrai
+la ferme si elle est fausse*)
+IF OuvrirFermer THEN
+	IF Get_Floor() = 0 THEN
+		IF NOT PRDCouv THEN ORDC:=TRUE;END_IF
+	ELSIF Get_Floor() = 1 THEN
+		IF NOT P1ouv THEN O1:=TRUE;END_IF
+	ELSIF Get_Floor() = 2 THEN
+		IF NOT P2ouv THEN O2:=TRUE;END_IF
+	ELSIF Get_Floor() = 3 THEN
+		IF NOT P3ouv THEN O3:=TRUE;END_IF
+	END_IF
+ELSE
+	IF Get_Floor() = 0 THEN
+		IF NOT PRDCfer THEN FRDC:=TRUE;END_IF
+	ELSIF Get_Floor() = 1 THEN
+		IF NOT P1fer THEN F1:=TRUE;END_IF
+	ELSIF Get_Floor() = 2 THEN
+		IF NOT P2fer THEN F2:=TRUE;END_IF
+	ELSIF Get_Floor() = 3 THEN
+		IF NOT P3fer THEN F3:=TRUE;END_IF
+	END_IF
+END_IF
+
+END_FUNCTION

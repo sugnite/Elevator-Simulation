@@ -1,0 +1,65 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM PRG_MAIN
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+INITIAL_STEP Init:
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Init TO Step6:= 
+ESTINIT2 AND NOT STOPbuttonVar
+
+
+END_TRANSITION
+TRANSITION FROM Init TO Step2:= 
+NOT ESTINIT2
+
+
+END_TRANSITION
+TRANSITION FROM Init TO Init:= 
+STOPbuttonVar
+
+
+END_TRANSITION
+STEP Step2:
+IF StanbyActive THEN Correspondance_Etages ();END_IF
+Initialisation_reset();
+SENS_M:=TRUE;
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step2 TO Step6:= 
+ESTINIT2
+
+
+END_TRANSITION
+STEP Step6:
+PAL_COMMUN_ETAGE;
+StandBY;
+Clignotement;
+STOP_PORTES();
+Correspondance_Etages();
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step6 TO Init:= 
+NOT ESTINIT2 OR STOPbuttonVar
+
+
+END_TRANSITION
+
+END_PROGRAM

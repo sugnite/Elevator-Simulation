@@ -1,0 +1,33 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles\/Capteurs' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION PorteEstOuverte : BOOL
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction permet de savoir si la porte à l'étage ou se trouve l'ascenseur est ouverte.
+Elle renvoie true si elle est ouverte.
+*)
+PorteEstOuverte:=FALSE;
+IF Get_Floor() = 0 THEN
+	IF PRDCouv THEN PorteEstOuverte:=TRUE;
+	ELSE PorteEstOuverte:=FALSE;
+	END_IF
+ELSIF Get_Floor() = 1 THEN
+	IF P1ouv  THEN PorteEstOuverte:=TRUE;
+	ELSE PorteEstOuverte:=FALSE;
+	END_IF
+ELSIF Get_Floor() = 2 THEN
+	IF P2ouv  THEN PorteEstOuverte:=TRUE;
+	ELSE PorteEstOuverte:=FALSE;
+	END_IF
+ELSIF Get_Floor() = 3 THEN
+	IF P3ouv  THEN PorteEstOuverte:=TRUE;
+	ELSE PorteEstOuverte:=FALSE;
+	END_IF
+END_IF
+END_FUNCTION

@@ -1,0 +1,24 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles\/Capteurs' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Get_Floor : INT
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*
+Cette fonction renvoie l'étage de l'ascenseur si il est arreté à un étage
+renvoie une valeur supérieur si il est en mouvement
+*)
+IF PRDC=TRUE THEN Get_Floor:=0;
+ELSIF PET1=TRUE THEN Get_Floor:=1;
+ELSIF PET2=TRUE THEN Get_Floor:=2;
+ELSIF PET3=TRUE THEN Get_Floor:=3;
+ELSE Get_Floor:=4;
+END_IF
+(*0n verifie que l'ascenceur n'est pas en cours de mouvement*)
+IF CABD OR CABM THEN Get_Floor:=5;END_IF
+END_FUNCTION

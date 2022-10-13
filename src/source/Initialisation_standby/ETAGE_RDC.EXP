@@ -1,0 +1,55 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Initialisation_Standby' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM ETAGE_RDC
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+INITIAL_STEP Init:
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Init TO Step2:= 
+NOT PRDCFer
+
+
+END_TRANSITION
+STEP Step2:
+FRDC:=TRUE;
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step2 TO Step3:= 
+PRDCfer
+
+
+END_TRANSITION
+TRANSITION FROM Init TO Step3:= 
+PRDCfer
+
+
+END_TRANSITION
+STEP Step3:
+FRDC:=FALSE;
+Quel_Etage();
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step3 TO Init:= 
+TRUE
+
+
+END_TRANSITION
+
+END_PROGRAM

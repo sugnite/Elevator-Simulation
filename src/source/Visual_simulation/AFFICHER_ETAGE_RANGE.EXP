@@ -1,0 +1,83 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Simulation_Visuelle' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Afficher_Etage_Range : BOOL
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(* Cette fonction sert à l'affichage de l'étage dans lequel se trouve l'asenceur,
+ainsi que l'étage qui sera desservie prochainement.*)
+
+(* Utilisé uniquement sur la simulation visuelle de l'écran
+n'interfère pas avecx le porgramme principal*)
+
+IF 55 < CABmoveY AND CABmoveY<= 110 THEN
+	DisplayNumbETRDC:=TRUE;
+	DisplayNumbET1:=FALSE;
+ELSIF -55 < CABmoveY AND CABmoveY<= 55  THEN
+	DisplayNumbET1:=TRUE;
+	DisplayNumbETRDC:=FALSE;
+	DisplayNumbET2:=FALSE;
+ELSIF -165 < CABmoveY AND CABmoveY <= -55  THEN
+	DisplayNumbET2:=TRUE;
+	DisplayNumbET1:=FALSE;
+	DisplayNumbET3:=FALSE;
+ELSIF -220 < CABmoveY AND CABmoveY <= -165  THEN
+	DisplayNumbET3:=TRUE;
+	DisplayNumbET2:=FALSE;
+END_IF
+
+IF Get_Floor()+1 <> ETAGE_SUIVANT THEN
+	IF ETAGE_SUIVANT =  9 THEN
+		FLECHE_VERS:=FALSE;
+		DisplayVersRDC:=FALSE;
+		DisplayVersET1:=FALSE;
+		DisplayVersET2:=FALSE;
+		DisplayVersET3:=FALSE;
+	ELSIF ETAGE_SUIVANT = 1 THEN
+		FLECHE_VERS:=TRUE;
+		DisplayVersET1:=FALSE;
+		DisplayVersET2:=FALSE;
+		DisplayVersET3:=FALSE;
+		DisplayVersRDC:=TRUE;
+	ELSIF ETAGE_SUIVANT = 2 THEN
+		FLECHE_VERS:=TRUE;
+		DisplayVersRDC:=FALSE;
+		DisplayVersET2:=FALSE;
+		DisplayVersET3:=FALSE;
+		DisplayVersET1:=TRUE;
+	ELSIF ETAGE_SUIVANT = 3 THEN
+		FLECHE_VERS:=TRUE;
+		DisplayVersRDC:=FALSE;
+		DisplayVersET1:=FALSE;
+		DisplayVersET3:=FALSE;
+		DisplayVersET2:=TRUE;
+	ELSIF ETAGE_SUIVANT = 4 THEN
+		FLECHE_VERS:=TRUE;
+		DisplayVersRDC:=FALSE;
+		DisplayVersET1:=FALSE;
+		DisplayVersET2:=FALSE;
+		DisplayVersET3:=TRUE;
+	END_IF
+ELSE
+	FLECHE_VERS:=FALSE;
+	DisplayVersRDC:=FALSE;
+	DisplayVersET1:=FALSE;
+	DisplayVersET2:=FALSE;
+	DisplayVersET3:=FALSE;
+END_IF
+
+IF NOT ARRETcabRDC AND NOT ARRETcabD1 AND  NOT ARRETcabM1 AND  NOT ARRETcabD2 AND NOT ARRETcabM2 AND NOT ARRETcabET3 THEN
+	IF PRDC OR PET3 THEN
+		FinDefinition_SENS:=TRUE;
+	END_IF
+ELSE FinDefinition_SENS:=FALSE;END_IF
+
+
+
+Afficher_Etage_Range:=FALSE;
+END_FUNCTION

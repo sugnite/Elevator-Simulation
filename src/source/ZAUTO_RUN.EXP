@@ -1,0 +1,54 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+  FUNCTION ZAuto_RUN : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	TimerCab:TP;
+	TimerPortes: TP;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction permet de faire fonctionner les moteurs de la simulation*)
+
+(* Init Porte*)
+IF NOT InitPortesAscSalon THEN
+	(*Fermeture des portes
+et Instanciation d'un offset pour aligner le compteur d'étage visuel*)
+	VisuRDCDx:=-60;
+	VisuRDCDy:=FX_PorteD(VisuRDCDx);
+	VisuRDCGx:=FX_Porte_Vitesse(VisuRDCDx);
+	VisuRDCGy:=FX_PorteG(VisuRDCGx);
+
+	VisuET1Dx:=-60;
+	VisuET1Dy:=FX_PorteD(VisuET1Dx);
+	VisuET1Gx:=FX_Porte_Vitesse(VisuET1Dx);
+	VisuET1Gy:=FX_PorteG(VisuET1Gx);
+
+	VisuET2Dx:=-60;
+	VisuET2Dy:=FX_PorteD(VisuET2Dx);
+	VisuET2Gx:=FX_Porte_Vitesse(VisuET2Dx);
+	VisuET2Gy:=FX_PorteG(VisuET2Gx);
+
+	VisuET3Dx:=-60;
+	VisuET3Dy:=FX_PorteD(VisuET3Dx);
+	VisuET3Gx:=FX_Porte_Vitesse(VisuET3Dx);
+	VisuET3Gy:=FX_PorteG(VisuET3Gx);
+
+	InitPortesAscSalon:=TRUE;
+	DisplayNumbET1:=TRUE;
+	Offset_ChiffreY:=-5;
+END_IF
+(*Affichage du compteur d'étage visuel*)
+Afficher_Etage_Range();
+
+(*Appel des fonctions de mouvement en focntion des moteurs*)
+IF FRDC OR ORDC THEN VisuPortesRDC();END_IF
+IF F1 OR O1 THEN VisuPortesET1();END_IF
+IF F2 OR O2 THEN VisuPortesET2();END_IF
+IF F3 OR O3 THEN VisuPortesET3();END_IF
+IF CABD OR CABM THEN VisuCabine();END_IF
+
+END_FUNCTION

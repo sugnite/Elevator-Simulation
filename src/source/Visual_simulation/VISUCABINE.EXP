@@ -1,0 +1,109 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Simulation_Visuelle' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION VisuCabine : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	TimerDeTempo: TP;
+	CompteurPortesVisu: INT;
+	CompteurVarVisu: INT;
+	CompteurDeTemps: INT;
+	Step: INT;
+	CompteurLocal: INT;
+	ListePresence: ARRAY [1..4] OF BOOL;
+	ListePosCab: ARRAY [1..9,1..2] OF INT;
+	ListePresenceET: ARRAY [1..9] OF BOOL;
+	MoveSlowCab: INT;
+	MoveMediumCab: INT;
+	MoveFastCab: INT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(* Cette fonction a pour but de  faire bouger la cabine en fonction de l'activation des moteurs*)
+
+(* La cabine enclenchera les capteurs de fin de courses si elle se trouve a la position de l'etage défini*)
+
+(* IL y a 3 variable de vitesse défini sur 3 zones pour que la cabine se posiitonne parfaitement à l'étage et sans le dépasser*)
+
+(*VAleurs d'initialisation du visuel*)
+ListePresenceET[9]:=FALSE;
+
+(* variable de la zone de ralentissement/ accélérationde la cabine*)
+ListePosCab[9,1]:= 130 ;
+ListePosCab[9,2]:= 90;
+
+ListePosCab[1,1]:=  130;
+ListePosCab[1,2]:= 90;
+ListePosCab[2,1]:=  20;
+ListePosCab[2,2]:= -20;
+ListePosCab[3,1]:= - 90;
+ListePosCab[3,2]:= - 130;
+ListePosCab[4,1]:= - 200;
+ListePosCab[4,2]:= - 240;
+
+ListePresenceET[1]:=PRDC;
+ListePresenceET[2]:=PET1;
+ListePresenceET[3]:=PET2;
+ListePresenceET[4]:=PET3;
+
+(*La variable ZoneDepCab Zone de Départ Cabine sert au départ lent de la cabine*)
+IF ZoneDepCab = 0 THEN ZoneDepCab:= 2;END_IF
+
+IF NOT ListePresenceET[ETAGE_SUIVANT] THEN
+	IF CABD THEN
+		MoveSlowCab:=1;
+		MoveMediumCab:=5;
+		MoveFastCab:=10;
+	ELSIF CABM THEN
+		MoveSlowCab:=-1;
+		MoveMediumCab:=-5;
+		MoveFastCab:=-10;
+	END_IF
+	IF CABD OR CABM THEN
+		wait(IN:=TRUE, PT:=T#10ms);
+		IF NOT wait.Q THEN
+			IF ZoneDepCab <> ETAGE_SUIVANT THEN
+				IF CABmoveY > ListePosCab[ZoneDepCab,2] AND CABmoveY < ListePosCab[ZoneDepCab,1] THEN
+					wait(IN:=FALSE);
+					CABmoveY:=CABmoveY+MoveMediumCab;
+				END_IF
+			END_IF
+			IF CABmoveY > ListePosCab[ETAGE_SUIVANT,2] AND CABmoveY < ListePosCab[ETAGE_SUIVANT,1] THEN
+				wait(IN:=FALSE);
+				CABmoveY:=CABmoveY+MoveSlowCab;
+
+			ELSIF CABmoveY > ListePosCab[ETAGE_SUIVANT,2] -20 AND  CABmoveY <= ListePosCab[ETAGE_SUIVANT,2]  OR CABmoveY < ListePosCab[ETAGE_SUIVANT,1]+20 AND CABmoveY >= ListePosCab[ETAGE_SUIVANT,1] THEN
+				wait(IN:=FALSE);
+				CABmoveY:=CABmoveY+MoveMediumCab;
+			ELSE
+				wait(IN:=FALSE);
+				CABmoveY:=CABmoveY+MoveFastCab;
+			END_IF
+		END_IF
+	END_IF
+END_IF
+
+IF CABmoveY = 110 THEN
+	PRDC:=TRUE;
+	ZoneDepCab:=1;
+ELSE PRDC:=FALSE;END_IF
+
+IF CABmoveY = 0 THEN
+	 PET1:=TRUE;
+	IF F1 THEN ZoneDepCab:=2;END_IF
+ELSE PET1:=FALSE;END_IF
+
+IF CABmoveY = -110 THEN
+	PET2:=TRUE;
+	IF F2 THEN ZoneDepCab:=3;END_IF
+ELSE PET2:=FALSE;END_IF
+
+IF CABmoveY = -220 THEN
+	PET3:=TRUE;
+	IF F3 THEN ZoneDepCab:=4;END_IF
+ELSE PET3:=FALSE;END_IF
+
+
+END_FUNCTION

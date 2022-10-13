@@ -1,0 +1,20 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Simulation_Visuelle' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION FX_PorteD : REAL
+VAR_INPUT
+	PosXPorte: INT;
+END_VAR
+VAR
+	VarLocalA: REAL;
+	ValXLocal: REAL;
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*Cette fonction retourne la position Y en fonction de l'axe X de la porte droite*)
+VarLocalA:=(27.0/71.0);
+ValXLocal:= INT_TO_REAL(PosXPorte);
+VarLocalA:=(VarLocalA)*(ValXLocal);
+FX_PorteD:=VarLocalA- 2;
+END_FUNCTION

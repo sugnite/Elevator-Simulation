@@ -1,0 +1,18 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Fonctions_Usuelles' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Last_Capt_Pres2 : INT
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+(*cette fonction se rapproche de get_floor mais elle permet d'obtenir le dernier capteur ou était l'ascenseur*)
+IF PRDC=TRUE THEN Last_Capt_Pres2:=1; END_IF
+IF PET1=TRUE THEN Last_Capt_Pres2:=2; END_IF
+IF PET2=TRUE THEN Last_Capt_Pres2:=3; END_IF
+IF PET3=TRUE THEN Last_Capt_Pres2:=4; END_IF
+IF NOT PRDC AND NOT PET1 AND NOT PET2 AND NOT PET3 THEN Last_Capt_Pres2:=0;END_IF
+END_FUNCTION

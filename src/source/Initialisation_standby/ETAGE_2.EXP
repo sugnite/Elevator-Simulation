@@ -1,0 +1,54 @@
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Initialisation_Standby' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM ETAGE_2
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+INITIAL_STEP Init:
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Init TO Step3:= 
+P2fer
+
+
+END_TRANSITION
+TRANSITION FROM Init TO Step11:= 
+NOT P2fer
+
+
+END_TRANSITION
+STEP Step11:
+F2:=TRUE;
+
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step11 TO Step3:= 
+P2fer
+
+
+END_TRANSITION
+STEP Step3:
+F2:=FALSE;
+
+END_STEP
+(* @SFCMAXTIME := '' *)
+(* @SFCMINTIME := '' *)
+(* @SFCCOMMENT := '' *)
+TRANSITION FROM Step3 TO Init:= 
+TRUE
+
+
+END_TRANSITION
+
+END_PROGRAM
